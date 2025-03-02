@@ -11,19 +11,17 @@ public class User {
     @Id
     private ObjectId id;
 
-    private String username;
-
-    private String email;
+    private String username, email, password, role;
 
     private Date createdAtDAte;
 
-    private String password;
-
-    private String role;
+    private Integer credits;
 
     public User() {
+        this.id = new ObjectId();
         this.createdAtDAte = new Date();
         this.role = "USER";
+        this.credits = 100;
     }
 
     public ObjectId getId() { return id; }
@@ -41,4 +39,7 @@ public class User {
     public void setPassword(String password) { this.password = password; }
 
     public String getRole() { return role; }
+
+    public Integer getCredits() { return credits; }
+    public void setCredits(Integer credits) { this.credits = credits; }
 }
