@@ -2,9 +2,12 @@ package dev.starzynski.artgen_backend.Model;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Document(collection = "users")
 public class User {
@@ -17,11 +20,15 @@ public class User {
 
     private Integer credits;
 
+    @DBRef
+    private List<Art> arts;
+
     public User() {
         this.id = new ObjectId();
         this.createdAtDAte = new Date();
         this.role = "USER";
         this.credits = 100;
+        this.arts = new ArrayList<>();
     }
 
     public ObjectId getId() { return id; }
@@ -42,4 +49,6 @@ public class User {
 
     public Integer getCredits() { return credits; }
     public void setCredits(Integer credits) { this.credits = credits; }
+
+    public List<Art> getArts() { return arts; }
 }
