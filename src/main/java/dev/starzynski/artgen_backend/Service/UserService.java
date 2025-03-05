@@ -26,12 +26,19 @@ public class UserService {
 
     public ResponseEntity<?> registerUser(User user) {
         try {
-            Boolean isExisting = userRepository.findByUsername(user.getUsername()).isPresent();
+            Boolean isExistingByUsername = userRepository.findByUsername(user.getUsername()).isPresent();
+            Boolean isExistingByEmail = userRepository.findByEmail(user.getEmail()).isPresent();
 
-            if (isExisting) {
+            if (isExistingByUsername) {
                 return ResponseEntity
                         .status(HttpStatus.CONFLICT)
-                        .body(Collections.singletonMap("message", "User already exists."));
+                        .body(Collections.singletonMap("message", "User with this username already exists."));
+            }
+
+            if (isExistingByEmail) {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("message", "User with this e-mail already exists."));
             }
 
             userRepository.insert(user);
@@ -58,7 +65,7 @@ public class UserService {
         } catch (AuthenticationException e) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
-                    .body(Collections.singletonMap("message", "User doesn't exist."));
+                    .body(Collections.singletonMap("message", "Failed to log in. Please try again"));
         }
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("message", "Server error in login service."));
