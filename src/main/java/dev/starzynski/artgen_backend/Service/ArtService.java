@@ -31,6 +31,10 @@ public class ArtService {
 
             user.get().getArts().add(art);
 
+            user.get().setCredits(user.get().getCredits() - cost);
+
+            userRepository.save(user.get());
+
             return art.getLinkTo();
         } catch (Exception e) {
             throw new RuntimeException(e);
