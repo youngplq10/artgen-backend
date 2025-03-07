@@ -1,5 +1,6 @@
 package dev.starzynski.artgen_backend.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dev.starzynski.artgen_backend.Service.GenerateRandomStringService;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -12,6 +13,7 @@ public class Art {
     private ObjectId id;
 
     @DBRef
+    @JsonIgnoreProperties("arts")
     private User user;
 
     private String link, prompt, linkTo;

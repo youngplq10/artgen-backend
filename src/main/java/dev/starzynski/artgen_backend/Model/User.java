@@ -16,7 +16,7 @@ public class User {
 
     private String username, email, password, role;
 
-    private Date createdAtDAte;
+    private Date createdAtDate;
 
     private Integer credits;
 
@@ -25,7 +25,7 @@ public class User {
 
     public User() {
         this.id = new ObjectId();
-        this.createdAtDAte = new Date();
+        this.createdAtDate = new Date();
         this.role = "USER";
         this.credits = 100;
         this.arts = new ArrayList<>();
@@ -40,7 +40,7 @@ public class User {
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
-    public Date getCreatedAtDAte() { return createdAtDAte; }
+    public Date getCreatedAtDAte() { return createdAtDate; }
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }

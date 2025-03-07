@@ -12,6 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -69,5 +70,23 @@ public class UserService {
         }
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("message", "Server error in login service."));
+    }
+
+    public ResponseEntity<?> getUserData(String username) {
+        try {
+            Optional<User> user = userRepository.findByUsername(username);
+
+            if (user.isPresent()) {
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(user.get());
+            } else {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("message", "User not found."));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
