@@ -1,5 +1,6 @@
 package dev.starzynski.artgen_backend.Service;
 
+import dev.starzynski.artgen_backend.Model.Art;
 import dev.starzynski.artgen_backend.Model.User;
 import dev.starzynski.artgen_backend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Optional;
 
 @Service
@@ -77,6 +79,7 @@ public class UserService {
             Optional<User> user = userRepository.findByUsername(username);
 
             if (user.isPresent()) {
+                user.get().getArts().sort(Comparator.comparing(Art::getCreatedAtDate).reversed());
                 return ResponseEntity
                         .status(HttpStatus.OK)
                         .body(user.get());
