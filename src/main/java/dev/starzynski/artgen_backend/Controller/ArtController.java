@@ -5,9 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/api")
@@ -18,5 +16,10 @@ public class ArtController {
     @PostMapping("/auth/art")
     public ResponseEntity<String> createArt(@RequestPart String username, @RequestPart String link, @RequestPart String prompt, @RequestPart String cost) {
         return new ResponseEntity<String> (artService.createArt(username, link, prompt, Integer.parseInt(cost)), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/auth/art/{linkTo}")
+    public ResponseEntity<?> getArtData(@PathVariable String linkTo) {
+        return artService.getArtData(linkTo);
     }
 }
