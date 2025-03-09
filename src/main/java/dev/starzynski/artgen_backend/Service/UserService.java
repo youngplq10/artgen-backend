@@ -79,10 +79,76 @@ public class UserService {
             Optional<User> user = userRepository.findByUsername(username);
 
             if (user.isPresent()) {
-                user.get().getArts().sort(Comparator.comparing(Art::getCreatedAtDate).reversed());
+                user.get().getArts().sort(Comparator.comparing(Art::getId).reversed());
                 return ResponseEntity
                         .status(HttpStatus.OK)
                         .body(user.get());
+            } else {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("message", "User not found."));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ResponseEntity<?> getUsersCredits(String username) {
+        try {
+            Optional<User> user = userRepository.findByUsername(username);
+
+            if (user.isPresent()) {
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(user.get().getCredits());
+            } else {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("message", "User not found."));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ResponseEntity<?> processCredits(String username, String cost) {
+        try {
+            Optional<User> user = userRepository.findByUsername(username);
+
+            if (user.isPresent()) {
+                if (user.get().getCredits() >= Integer.parseInt(cost)) {
+                    user.get().setCredits(user.get().getCredits() - Integer.parseInt(cost));
+                    userRepository.save(user.get());
+
+                    return ResponseEntity
+                            .status(HttpStatus.OK)
+                            .body(true);
+                } else {
+                    return ResponseEntity
+                            .status(HttpStatus.CONFLICT)
+                            .body(Collections.singletonMap("message", "Not enough credits."));
+                }
+            } else {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("message", "User not found."));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ResponseEntity<?> refundCredits(String username, String cost) {
+        try {
+            Optional<User> user = userRepository.findByUsername(username);
+
+            if (user.isPresent()) {
+                user.get().setCredits(user.get().getCredits() + Integer.parseInt(cost));
+                userRepository.save(user.get());
+                
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(user.get().getCredits());
             } else {
                 return ResponseEntity
                         .status(HttpStatus.CONFLICT)

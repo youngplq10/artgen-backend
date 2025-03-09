@@ -28,4 +28,14 @@ public class UserController {
     public ResponseEntity<?> getUserData(@PathVariable String username) {
         return userService.getUserData(username);
     }
+
+    @PostMapping("/auth/user/process/{username}/{cost}")
+    public ResponseEntity<?> processCredits(@PathVariable String username, @PathVariable String cost) {
+        return userService.processCredits(username, cost);
+    }
+
+    @PostMapping("/auth/user/refund/{username}/{cost}")
+    public ResponseEntity<?> refundCredits(@PathVariable String username, @PathVariable String cost) {
+        return userService.refundCredits(username, cost);
+    }
 }
