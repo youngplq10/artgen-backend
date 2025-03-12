@@ -1,7 +1,9 @@
 package dev.starzynski.artgen_backend.Service;
 
 import dev.starzynski.artgen_backend.Model.Art;
+import dev.starzynski.artgen_backend.Model.Payment;
 import dev.starzynski.artgen_backend.Model.User;
+import dev.starzynski.artgen_backend.Repository.PaymentRepository;
 import dev.starzynski.artgen_backend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,9 @@ public class UserService {
 
     @Autowired
     private AuthenticationManager authManager;
+
+    @Autowired
+    private PaymentRepository paymentRepository;
 
     public ResponseEntity<?> registerUser(User user) {
         try {
@@ -145,7 +150,7 @@ public class UserService {
             if (user.isPresent()) {
                 user.get().setCredits(user.get().getCredits() + Integer.parseInt(cost));
                 userRepository.save(user.get());
-                
+
                 return ResponseEntity
                         .status(HttpStatus.OK)
                         .body(user.get().getCredits());
@@ -153,6 +158,36 @@ public class UserService {
                 return ResponseEntity
                         .status(HttpStatus.CONFLICT)
                         .body(Collections.singletonMap("message", "User not found."));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ResponseEntity<?> addCredits(String amount, String sessionId, String username) {
+        try {
+            Optional<User> optionalUser = userRepository.findByUsername(username);
+            Optional<Payment> optionalPayment = paymentRepository.findBySessionId(sessionId);
+
+            if (optionalUser.isPresent() && optionalPayment.isEmpty()) {
+                User user = optionalUser.get();
+                Payment payment = new Payment();
+                payment.setAmount(Integer.parseInt(amount));
+                payment.setSessionId(sessionId);
+                payment.setUser(user);
+
+                user.setCredits(user.getCredits() + Integer.parseInt(amount));
+                userRepository.save(user);
+                paymentRepository.insert(payment);
+
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(true);
+            } else {
+                System.out.println("return false");
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(false);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

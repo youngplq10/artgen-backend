@@ -14,8 +14,8 @@ public class ArtController {
     private ArtService artService;
 
     @PostMapping("/auth/art")
-    public ResponseEntity<String> createArt(@RequestPart String username, @RequestPart String link, @RequestPart String prompt) {
-        return new ResponseEntity<String> (artService.createArt(username, link, prompt), HttpStatus.CREATED);
+    public ResponseEntity<String> createArt(@RequestPart String username, @RequestPart String link, @RequestPart String prompt, @RequestPart String cost) {
+        return new ResponseEntity<String> (artService.createArt(username, link, prompt, Integer.parseInt(cost)), HttpStatus.CREATED);
     }
 
     @GetMapping("/auth/art/{linkTo}")

@@ -20,7 +20,7 @@ public class ArtService {
     @Autowired
     private UserRepository userRepository;
 
-    public String createArt(String username, String link, String prompt) {
+    public String createArt(String username, String link, String prompt, Integer cost) {
         try {
             Optional<User> user = userRepository.findByUsername(username);
 
@@ -28,6 +28,7 @@ public class ArtService {
             art.setUser(user.get());
             art.setLink(link);
             art.setPrompt(prompt);
+            art.setCost(cost);
 
             artRepository.insert(art);
 

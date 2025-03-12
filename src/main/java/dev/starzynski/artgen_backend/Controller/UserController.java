@@ -38,4 +38,9 @@ public class UserController {
     public ResponseEntity<?> refundCredits(@PathVariable String username, @PathVariable String cost) {
         return userService.refundCredits(username, cost);
     }
+
+    @PostMapping("/auth/user/credits/add")
+    public ResponseEntity<?> addCredits(@RequestPart String amount, @RequestPart String session_id, @RequestPart String username) {
+        return userService.addCredits(amount, session_id, username);
+    }
 }
