@@ -1,0 +1,1 @@
+ArtGen is a web app I created for educational purposes. The app uses OpenAI's DALL·E 3 model to generate images in selected categories and stores the images in GCS while saving prompt data in a NoSQL MongoDB database.
